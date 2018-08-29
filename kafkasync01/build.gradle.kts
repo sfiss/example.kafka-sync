@@ -11,25 +11,34 @@ version = "0.1-SNAPSHOT"
 buildscript {
     var kotlin_version: String by extra
     kotlin_version = "1.2.61"
+    var spring_boot_version: String by extra
+    spring_boot_version = "2.0.1.RELEASE"
+
     repositories {
         mavenCentral()
+        gradlePluginPortal()
     }
+
     dependencies {
-        classpath(kotlinModule("gradle-plugin", kotlin_version))
+        classpath(kotlin("gradle-plugin", kotlin_version))
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
 
 val kotlin_version: String by extra
+val spring_boot_version: String by extra
 
 plugins {
     java
     kotlin("jvm") version "1.2.61"
+    kotlin("plugin.spring") version "1.2.61"
+    id("org.springframework.boot") version "2.0.1.RELEASE"
 }
 
 dependencies {
-    compile(kotlinModule("stdlib-jdk8", kotlin_version))
-    compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version")
+    compile(kotlin("stdlib-jdk8", kotlin_version))
+    compile("org.springframework.boot:spring-boot-starter-web:$spring_boot_version")
+    compile(kotlin("reflect", "1.1.51"))
 }
 
 repositories {
