@@ -1,11 +1,9 @@
-package org.example.kafkasync.application
+package org.example.kafkasync
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.context.annotation.ComponentScan
 
 @SpringBootApplication
-@ComponentScan("org.example.kafkasync")
 class SourceApplication
 
 fun main(args: Array<String>) {
