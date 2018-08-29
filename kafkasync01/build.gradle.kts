@@ -38,7 +38,7 @@ plugins {
 dependencies {
     compile(kotlin("stdlib-jdk8", kotlin_version))
     compile("org.springframework.boot:spring-boot-starter-web:$spring_boot_version")
-    compile(kotlin("reflect", "1.1.51"))
+    compile(kotlin("reflect", kotlin_version))
 }
 
 repositories {
