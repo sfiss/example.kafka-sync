@@ -7,7 +7,9 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.IntegerDeserializer
 import org.apache.kafka.common.serialization.IntegerSerializer
 import org.apache.kafka.common.serialization.Serdes
+import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.kstream.Consumed
+import org.apache.kafka.streams.kstream.Produced
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -16,27 +18,36 @@ import org.springframework.kafka.core.*
 import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.kafka.support.serializer.JsonSerde
 import org.springframework.kafka.support.serializer.JsonSerializer
-import java.util.HashMap
+import java.util.*
 import javax.persistence.*
 
-@Entity
-@Table(name = "data_d")
-data class DataD(
-        @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Int? = null,
+data class DataE(
         override val content: String) : Data
 
 @Configuration
-class DataDKafkaConfig {
+class DataEKafkaConfig {
 
     companion object {
-        const val topic: String = "data-d"
+        const val topic: String = "data-e"
 
-        fun consumed(): Consumed<Int, DataD> = Consumed.with(Serdes.IntegerSerde(),
-                JsonSerde(DataD::class.java, ObjectMapper().registerModule(KotlinModule())))
+        fun produced(): Produced<Int, DataE> = Produced.with(Serdes.IntegerSerde(),
+                JsonSerde(DataE::class.java, ObjectMapper().registerModule(KotlinModule())))
     }
 
     @Value("\${spring.kafka.bootstrap-servers}")
     internal lateinit var bootstrapServers: String
+
+    @Value("\${spring.kafka.stream-app.id}")
+    internal lateinit var streamAppId: String
+
+    @Bean("streamsConfig")
+    fun streamsConfig(): Properties {
+        val props = Properties()
+        props[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
+        props[StreamsConfig.APPLICATION_ID_CONFIG] = streamAppId
+        props[JsonDeserializer.TRUSTED_PACKAGES] = "*" // trust all
+        return props
+    }
 
     fun consumerConfigs(): Map<String, Any> {
         val props = HashMap<String, Any>()
@@ -48,15 +59,15 @@ class DataDKafkaConfig {
         return props
     }
 
-    fun consumerFactory(): ConsumerFactory<Int, DataD> {
+    fun consumerFactory(): ConsumerFactory<Int, DataE> {
         return DefaultKafkaConsumerFactory(consumerConfigs(),
                 IntegerDeserializer(),
-                JsonDeserializer(DataD::class.java, ObjectMapper().registerModule(KotlinModule())))
+                JsonDeserializer(DataE::class.java, ObjectMapper().registerModule(KotlinModule())))
     }
 
     @Bean("${topic}ContainerFactory")
-    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<Int, DataD> {
-        val factory = ConcurrentKafkaListenerContainerFactory<Int, DataD> ()
+    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<Int, DataE>  {
+        val factory = ConcurrentKafkaListenerContainerFactory<Int, DataE> ()
         factory.consumerFactory = consumerFactory()
         return factory
     }
