@@ -11,9 +11,8 @@ rem call "bin\windows\kafka-topics.bat" --create --zookeeper localhost:2181 --re
 rem call "bin\windows\kafka-topics.bat" --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic data-s
 rem call "bin\windows\kafka-topics.bat" --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic data-a
 
-pause
-
+rem pause
 :: Log consumer
-call "bin\windows\kafka-console-consumer.bat" -bootstrap-server localhost:9092 --from-beginning --topic data-s
+rem call "bin\windows\kafka-console-consumer.bat" -bootstrap-server localhost:9092 --from-beginning --topic data-s
 
-pause
+rem pause

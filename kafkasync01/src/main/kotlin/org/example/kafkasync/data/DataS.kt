@@ -41,6 +41,7 @@ internal class DataSKafkaConfig {
         props[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
         props[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = IntegerSerializer::class.java
         props[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = JsonSerializer::class.java
+        props[JsonSerializer.ADD_TYPE_INFO_HEADERS] = false // see https://github.com/spring-projects/spring-kafka/issues/794#issuecomment-418473111
         return props
     }
 
@@ -65,8 +66,8 @@ internal class DataSKafkaConfig {
     }
 
     @Bean("${topic}ContainerFactory")
-    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<Int, DataS>  {
-        val factory = ConcurrentKafkaListenerContainerFactory<Int, DataS> ()
+    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<Int, DataS> {
+        val factory = ConcurrentKafkaListenerContainerFactory<Int, DataS>()
         factory.consumerFactory = consumerFactory()
         return factory
     }

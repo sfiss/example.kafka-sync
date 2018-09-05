@@ -48,20 +48,20 @@ internal class DataService {
         kafkaTemplate.send(message)
     }
 
-    fun enhanceData(data: Data): DataE = DataE(data.content)
+    fun enhanceData(data: Data): DataE = DataE(data.content.replace("Data-S", "Data-E"))
 
     @KafkaListener(topics = [DataSKafkaConfig.topic], groupId = DataSKafkaConfig.topic, containerFactory = "${DataSKafkaConfig.topic}ContainerFactory")
-    fun logDataS(@Payload data: DataS) {
+    private fun logDataS(@Payload data: DataS) {
         println("Received S=$data")
     }
 
     @KafkaListener(topics = [DataDKafkaConfig.topic], groupId = DataDKafkaConfig.topic, containerFactory = "${DataDKafkaConfig.topic}ContainerFactory")
-    fun logDataD(@Payload data: DataD) {
+    private fun logDataD(@Payload data: DataD) {
         println("Received D=$data")
     }
 
     @KafkaListener(topics = [DataEKafkaConfig.topic], groupId = DataEKafkaConfig.topic, containerFactory = "${DataEKafkaConfig.topic}ContainerFactory")
-    fun logDataE(@Payload data: DataE) {
+    private fun logDataE(@Payload data: DataE) {
         println("Received E=$data")
     }
 

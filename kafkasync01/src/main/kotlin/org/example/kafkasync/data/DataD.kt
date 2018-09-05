@@ -56,7 +56,7 @@ class DataDKafkaConfig {
 
     @Bean("${topic}ContainerFactory")
     fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<Int, DataD> {
-        val factory = ConcurrentKafkaListenerContainerFactory<Int, DataD> ()
+        val factory = ConcurrentKafkaListenerContainerFactory<Int, DataD>()
         factory.consumerFactory = consumerFactory()
         return factory
     }
